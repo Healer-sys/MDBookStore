@@ -8,23 +8,28 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.lsx.finalhomework.R;
+import com.lsx.finalhomework.adapters.UserMenuViewAdapter;
 import com.lsx.finalhomework.entities.Book;
 import com.lsx.finalhomework.entities.BookService;
 import java.util.ArrayList;
 import java.util.List;
 
 public class User_MainActivity extends AppCompatActivity {
+    User_BookManageFragment bookManageFragment;
+    UserManageFragment userManageFragment;
+    infoManagerfragment infoManagerfragment;
 
-    Fragment infoManagerfragment;
-    Fragment userManagersfragment;
-    private BottomNavigationView bottomNavigationView;
-    private ViewPager viewPager;
-    public List<Fragment> fragmentList = new ArrayList();
+
+    private BottomNavigationView mbottomNavigationView;
+    private UserMenuViewAdapter mUserMenuViewAdapter;
+    private ViewPager2 viewPager;
+    public List<Fragment> fragmentList;
     BookService bookService;
 
     Book book;
@@ -37,25 +42,62 @@ public class User_MainActivity extends AppCompatActivity {
 //        bookService = new BookService(this);
 //        bookService.addBook(book);
 
-        Button scanButton = findViewById(R.id.zxing_barcode_scanner);
-        scanButton.setOnClickListener(view -> {
-            // 启动扫描
-            ScanOptions options = new ScanOptions();
-            options.setPrompt("Scan a QR Code");
-            options.setBeepEnabled(true);
-            options.setOrientationLocked(true);
-            options.setCaptureActivity(com.journeyapps.barcodescanner.CaptureActivity.class);
-            scanLauncher.launch(options);
+
+        viewPager = findViewById(R.id.menu);
+        mbottomNavigationView = findViewById(R.id.menu_main);
+
+        initData();
+
+        //创建Adapter
+        mUserMenuViewAdapter = new UserMenuViewAdapter(User_MainActivity.this,fragmentList);
+
+        viewPager.setAdapter(mUserMenuViewAdapter);
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0:
+                        mbottomNavigationView.setSelectedItemId(R.id.book_item);
+                        break;
+                    case 1:
+                        mbottomNavigationView.setSelectedItemId(R.id.UserM_item);
+                        break;
+                    case 2:
+                        mbottomNavigationView.setSelectedItemId(R.id.InfoM_item);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        mbottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.book_item:
+                    viewPager.setCurrentItem(0);
+                    break;
+                case R.id.UserM_item:
+                    viewPager.setCurrentItem(1);
+                    break;
+                case R.id.InfoM_item:
+                    viewPager.setCurrentItem(2);
+                    break;
+                default:
+                    break;
+            }
+            return true;
         });
     }
 
-    private final ActivityResultLauncher<ScanOptions> scanLauncher = registerForActivityResult(new ScanContract(), result -> {
-        if(result.getContents() != null) {
-            // 扫描结果
-            Toast.makeText(User_MainActivity.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(User_MainActivity.this, "Scan failed", Toast.LENGTH_LONG).show();
-        }
-    });
+    private void initData() {
+        fragmentList = new ArrayList<>();
 
+        bookManageFragment = new User_BookManageFragment();
+        userManageFragment = new UserManageFragment();
+        infoManagerfragment = new infoManagerfragment();
+
+        fragmentList.add(bookManageFragment);
+        fragmentList.add(userManageFragment);
+        fragmentList.add(infoManagerfragment);
+    }
 }
