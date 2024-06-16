@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lsx.finalhomework.MyAuth;
 import com.lsx.finalhomework.R;
+
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,7 +26,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText password;
 
     boolean login = true;
-
+    ImageView ivlogin;
+    long time, count = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (getSupportActionBar() != null) {
@@ -37,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         toggleLoginReg = (TextView) findViewById(R.id.toggleLoginReg);
         username = (EditText) findViewById(R.id.editTextTextEmailAddress);
         password = (EditText) findViewById(R.id.editTextTextPassword);
-
+        ivlogin = (ImageView) findViewById(R.id.iv_login);
         toggleLoginReg.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
@@ -46,6 +50,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!defaultUsername.equals("")) {
             this.username.setText(defaultUsername);
         }
+        // 图片按钮设置点击事件处理逻辑
+        ivlogin.setOnClickListener(view -> {
+            // 记录当前时间戳
+            long currentTimestamp = new Date().getTime();
+
+            // 判断是否在1秒内重复点击
+            if (currentTimestamp - time < 300) {
+                // 若重复点击，增加计数并提示用户
+                count++;
+                Toast Mag = new Toast(getApplicationContext());
+                Mag.setDuration(Toast.LENGTH_SHORT);
+                Mag.setText("继续点击" + (5 - count) + "次,进入管理模式");
+                Mag.show();
+                Mag.cancel();
+            } else {
+                // 超过1秒视为新的点击序列，重置计数
+                count = 1;
+            }
+            // 更新上次点击时间戳
+            time = currentTimestamp;
+            // 达到5次连续快速点击，提示用户暂停操作
+            if (count >= 5) {
+                Intent intent = new Intent(LoginActivity.this, User_MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void goToMain() {

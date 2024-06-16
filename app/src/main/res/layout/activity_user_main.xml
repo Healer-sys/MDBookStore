@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".controllers.User_MainActivity">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/zxing_barcode_scanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="扫描"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/menu_main"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:itemIconTint="@drawable/footstyle"
+        app:itemTextColor="@drawable/footstyle"
+        app:itemRippleColor="@null"
+        app:labelVisibilityMode="selected"
+        app:menu="@menu/admin_menu"/>
+
+</LinearLayout>

@@ -78,6 +78,18 @@ public class BookService extends MyDBHelper {
         return b;
     }
 
+    public void addBook(Book b) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", b.getName());
+        values.put("category", b.getCategory().ordinal());
+        values.put("img_url", b.getImgUrl());
+        values.put("author", b.getAuthor());
+        values.put("isbn", b.getISBN());
+        values.put("description", b.getDescription());
+        values.put("price", b.getPrice());
+        db.insert("book", null, values);
+    }
     public void initData() {
         SQLiteDatabase db = this.getWritableDatabase();
         initData(db);

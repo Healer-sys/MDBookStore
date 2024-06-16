@@ -27,14 +27,45 @@ public class Book {
         }
     }
 
-    int id;
-    Category category;
-    String name;
-    String imgUrl;
-    String author;
-    String ISBN;
-    String description;
-    double price;
+        /**
+         * 图书唯一标识符。
+         */
+        int id;
+
+        /**
+         * 图书分类。
+         */
+        Category category;
+
+        /**
+         * 图书名称。
+         */
+        String name;
+
+        /**
+         * 图书封面图片的URL。
+         */
+        String imgUrl;
+
+        /**
+         * 图书的作者。
+         */
+        String author;
+
+        /**
+         * 图书的国际标准书号（ISBN）。
+         */
+        String ISBN;
+
+        /**
+         * 图书的简介。
+         */
+        String description;
+
+        /**
+         * 图书的售价。
+         */
+        double price;
 
     public Book() { }
 

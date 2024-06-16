@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/bookmanage"
+        android:id="@+id/book_item"
+        android:title="书本管理"/>
+    <item
+        android:icon="@drawable/usermanage"
+        android:id="@+id/UserM_item"
+        android:title="用户管理"/>
+    <item
+        android:icon="@drawable/infomanage"
+        android:id="@+id/InfoM_item"
+        android:title="信息管理"/>
+
+</menu>
