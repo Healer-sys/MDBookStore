@@ -51,32 +51,45 @@ public class BookFragment extends Fragment implements View.OnClickListener, MyBo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // 初始化书籍服务
         bs = new BookService(getContext());
+        // 获取所有书籍列表
         // 获取图书列表
         List<Book> bookList = bs.getList();
+        // 使用HashMap来按照书籍类别对书籍进行分类
         // 创建分类到该类别的图书列表的映射
         HashMap<Book.Category, List<Book>> map = new HashMap<>();
+        // 初始化类别列表，用于存储所有的书籍类别
         categoryList = new ArrayList<>();
+        // 初始化头部位置映射，用于快速定位类别在综合书籍列表中的位置
         // 创建分类标题在列表中的位置到分类序号的映射
         headerPositionMap = new HashMap<>();
+        // 遍历书籍列表，对书籍进行分类
         for (int i = 0; i < bookList.size(); i++) {
+            // 如果当前类别还未存在于HashMap中，则添加该类别，并初始化对应的书籍列表
             if (!map.containsKey(bookList.get(i).getCategory())) {
                 Book.Category c = bookList.get(i).getCategory();
                 map.put(c, new ArrayList<>());
                 categoryList.add(c);
             }
+            // 将当前书籍添加到对应的类别书籍列表中
             map.get(bookList.get(i).getCategory()).add(bookList.get(i));
         }
+        // 初始化综合书籍列表，包含所有书籍及类别标题
         // 将分类的标题和各个分类的图书列表放入一个数组中
         bookListWithHeader = new ArrayList<>();
+        // 遍历类别列表，将每个类别及其书籍添加到综合书籍列表中
         for (int i = 0; i < categoryList.size(); i++) {
             Book.Category c = categoryList.get(i);
+            // 记录当前类别在综合书籍列表中的位置
             headerPositionMap.put(bookListWithHeader.size(), i);
+            // 添加类别标题到综合书籍列表
             bookListWithHeader.add(c);
+            // 将当前类别的所有书籍添加到综合书籍列表中
             bookListWithHeader.addAll(map.get(c));
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

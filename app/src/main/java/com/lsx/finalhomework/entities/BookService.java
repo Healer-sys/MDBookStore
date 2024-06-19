@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.lsx.finalhomework.MyDBHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class BookService extends MyDBHelper {
@@ -108,5 +109,21 @@ public class BookService extends MyDBHelper {
             values.put("price", b.getPrice());
             db.insert("book", null, values);
         }
+    }
+
+    //获取book表中的最大的id
+    public int getBookid() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("book", null, null, null, null, null, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToLast();
+            return cursor.getInt(0);
+        }
+        return 0;
+    }
+    //以名字为关键字删除数据
+    public void deleteBook(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("book", "name=?", new String[]{name});
     }
 }

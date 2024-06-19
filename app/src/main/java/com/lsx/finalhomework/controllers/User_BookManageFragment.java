@@ -1,28 +1,65 @@
 package com.lsx.finalhomework.controllers;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 import com.lsx.finalhomework.R;
+import com.lsx.finalhomework.adapters.BookListAdapter;
+import com.lsx.finalhomework.adapters.MyBookRecyclerViewAdapter;
+import com.lsx.finalhomework.entities.Book;
+import com.lsx.finalhomework.entities.BookService;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link User_BookManageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class User_BookManageFragment extends Fragment {
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class User_BookManageFragment extends Fragment implements MyBookRecyclerViewAdapter.OnItemClickListener, BookListAdapter.OnItemClickListener {
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    //列表
+    RecyclerView recyclerView;
+
+    TextView tvBookDate,tvBookIsbn,tvBookName;
+    EditText etBookPrice;
+    Button btnAddBook, btnBookUpdate;
+    String bookIsbn = new String();
+    String BookDate = new String();
+    BookService bs;
+    //数据源
+    List<Book> bookList;
+    BookListAdapter adapter;
+    ArrayList bookListWithHeader;
+    GridLayoutManager gridLayoutManager;
+    List<Book.Category> categoryList;
+
     private String mParam1;
     private String mParam2;
 
@@ -30,15 +67,7 @@ public class User_BookManageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment User_BookManageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static User_BookManageFragment newInstance(String param1, String param2) {
         User_BookManageFragment fragment = new User_BookManageFragment();
         Bundle args = new Bundle();
@@ -55,12 +84,130 @@ public class User_BookManageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+//        bs = new BookService(getContext());
+//        List<Book> bookList = bs.getList();
+//        int i = 0;
+//        HashMap<Integer, Book> map = new HashMap<>();
+//        for (i = 0; i < bookList.size(); i++) {
+//            map.put( i, bookList.get(i));
+//            bookListWithHeader.addAll();
+//        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user__book_manage, container, false);
+        View view = inflater.inflate(R.layout.fragment_user__book_manage, container, false);
+        Context context = getContext();
+        bs = new BookService(context);
+
+        //获取控件
+        recyclerView = view.findViewById(R.id.book_manage_list);
+        btnAddBook = view.findViewById(R.id.add_book_button);
+        btnBookUpdate = view.findViewById(R.id.update_book_button);
+        tvBookDate = view.findViewById(R.id.book_datemanage_textview);
+        tvBookIsbn = view.findViewById(R.id.book_isbn_textview);
+        tvBookName = view.findViewById(R.id.book_name_textview);
+        tvBookName.setMovementMethod(new ScrollingMovementMethod());
+        etBookPrice = view.findViewById(R.id.book_price_edittext);
+
+
+        gridLayoutManager = new GridLayoutManager(context, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapter = new BookListAdapter(bs.getList());
+        adapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(adapter);
+
+        //扫描图书按钮
+        btnAddBook.setOnClickListener(v -> {
+            // 启动扫描
+            ScanOptions options = new ScanOptions();
+            options.setPrompt("Scan a QR Code");
+            options.setBeepEnabled(true);
+            options.setOrientationLocked(true);//允许旋转
+            options.setCaptureActivity(com.journeyapps.barcodescanner.CaptureActivity.class);//定义扫描的界面
+            scanLauncher.launch(options);
+        });
+
+        //更新图书按钮
+        btnBookUpdate.setOnClickListener(v -> {
+            //跳转修改价格页面
+            if(etBookPrice.getText().toString().trim().isEmpty()){
+                Toast.makeText(context, "请输入有效的数字", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                try {
+                    JSONObject resultDate =  new JSONObject(BookDate);
+                    resultDate = resultDate.getJSONObject("data");
+                    //解析图片链接
+                    String picturesurl = resultDate.getString("pictures");
+                    picturesurl = picturesurl.replace("[", "")
+                            .replace("]", "")
+                            .replace("\\", "")
+                            .replace("\"", "");;
+                    Book book = new Book(bs.getBookid()+1, Book.Category.HISTORY, resultDate.getString("bookName"),picturesurl , resultDate.getString("author"), resultDate.getString("isbn"), resultDate.getString("bookDesc"), Double.parseDouble(etBookPrice.getText().toString()));
+                    bs.addBook(book);
+                    Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        return view;
+    }
+    private final ActivityResultLauncher<ScanOptions> scanLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if(result.getContents() != null) {
+
+            bookIsbn = result.getContents();
+            new Thread(() -> networkRequest(bookIsbn)).start();
+            Toast.makeText(getContext(), "扫描成功" + bookIsbn, Toast.LENGTH_SHORT).show();
+        }
+    });
+
+    private void networkRequest(String isbn) {
+        try {
+            URL url = new URL("https://data.isbn.work/openApi/getInfoByIsbn?isbn=" + isbn + "&appKey=ae1718d4587744b0b79f940fbef69e77");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.setDoOutput(false);
+
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code" + responseCode);
+            }
+            else {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BookDate = reader.readLine();
+            }
+            getActivity().runOnUiThread(() -> {
+                if (BookDate == null || BookDate.trim().isEmpty()) {
+                    tvBookName.setText("图书信息获取失败");
+                }
+                else {
+                    try {
+                        tvBookIsbn.setText(isbn);
+                        JSONObject resultDate =  new JSONObject(BookDate);
+                        resultDate = resultDate.getJSONObject("data");
+                        tvBookName.setText(resultDate.getString("bookName"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onItemClick(View view) {
+
     }
 }
