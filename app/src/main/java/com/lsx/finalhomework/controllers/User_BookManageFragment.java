@@ -1,10 +1,14 @@
 package com.lsx.finalhomework.controllers;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,12 +57,11 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
     String bookIsbn = new String();
     String BookDate = new String();
     BookService bs;
-    //数据源
-    List<Book> bookList;
+    private List<Book> bookList;
     BookListAdapter adapter;
     ArrayList bookListWithHeader;
     GridLayoutManager gridLayoutManager;
-    List<Book.Category> categoryList;
+
 
     private String mParam1;
     private String mParam2;
@@ -85,15 +88,6 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        bs = new BookService(getContext());
-//        List<Book> bookList = bs.getList();
-//        int i = 0;
-//        HashMap<Integer, Book> map = new HashMap<>();
-//        for (i = 0; i < bookList.size(); i++) {
-//            map.put( i, bookList.get(i));
-//            bookListWithHeader.addAll();
-//        }
-
     }
 
     @Override
@@ -116,9 +110,13 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
 
         gridLayoutManager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new BookListAdapter(bs.getList());
+        bookListWithHeader = new ArrayList<>();
+        bookListWithHeader.addAll(bs.getList());
+        adapter = new BookListAdapter(bookListWithHeader);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        //recyclerView设置点击事件
+
 
         //扫描图书按钮
         btnAddBook.setOnClickListener(v -> {
@@ -131,9 +129,9 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
             scanLauncher.launch(options);
         });
 
-        //更新图书按钮
+        //添加图书按钮
         btnBookUpdate.setOnClickListener(v -> {
-            //跳转修改价格页面
+            //判断有没有输入价格
             if(etBookPrice.getText().toString().trim().isEmpty()){
                 Toast.makeText(context, "请输入有效的数字", Toast.LENGTH_SHORT).show();
             }
@@ -147,8 +145,9 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
                             .replace("]", "")
                             .replace("\\", "")
                             .replace("\"", "");;
-                    Book book = new Book(bs.getBookid()+1, Book.Category.HISTORY, resultDate.getString("bookName"),picturesurl , resultDate.getString("author"), resultDate.getString("isbn"), resultDate.getString("bookDesc"), Double.parseDouble(etBookPrice.getText().toString()));
+                    Book book = new Book(bs.getBookid()+1, Book.Category.OTHER, resultDate.getString("bookName"),picturesurl , resultDate.getString("author"), resultDate.getString("isbn"), resultDate.getString("bookDesc"), Double.parseDouble(etBookPrice.getText().toString()));
                     bs.addBook(book);
+                    UiUpdate();
                     Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -207,7 +206,42 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
     }
 
     @Override
-    public void onItemClick(View view) {
+    public void onItemClick(View v) {
 
+        //删除修改书本信息
+        int position = recyclerView.getChildAdapterPosition(v);
+//        Toast.makeText(getContext(), "点击了" + position, Toast.LENGTH_SHORT).show();
+
+        Bundle bundle = new Bundle();
+        Object item = bookListWithHeader.get(position);
+        if (item instanceof Book) {
+            bundle.putInt("id", ((Book) item).getId());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("书本信息修改");
+            builder.setMessage("你选择以下操作对书本信息进行修改");
+            builder.setNeutralButton("修改", (dialog, which) -> {
+            //跳转
+            Intent intent=new Intent(getContext(),BookFixedActivity.class);
+            bundle.putSerializable("Book",((Book) item).getId());
+            intent.putExtras(bundle);
+            startActivity(intent);
+            //关闭Activity
+//            getActivity().finish();
+            });
+            builder.setNegativeButton("删除", (dialog, which) -> {
+                bs.deleteBookByid(((Book) item).getId());
+                Toast.makeText(getContext(),"书本信息删除成功",Toast.LENGTH_LONG).show();
+                //刷新Fragment
+                UiUpdate();
+                onStart();
+            });
+            builder.create();
+            builder.show();
+        }
+    }
+    public void UiUpdate(){
+        bookListWithHeader.clear();
+        bookListWithHeader.addAll(bs.getList());
+        adapter.notifyDataSetChanged();
     }
 }

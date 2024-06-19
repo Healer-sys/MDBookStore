@@ -90,7 +90,39 @@ public class BookService extends MyDBHelper {
         values.put("description", b.getDescription());
         values.put("price", b.getPrice());
         db.insert("book", null, values);
+        db.close();
     }
+
+    /**
+     * 根据书籍ID更新数据库中的书籍信息。
+     *
+     * 此方法根据提供的Book对象更新数据库中相应ID的记录。它使用ContentValues来打包更新的数据，
+     * 并通过SQLiteDatabase的update方法执行更新操作。如果匹配的记录不存在，则不会执行任何操作。
+     *
+     * @param bookId 要更新的书籍在数据库中的唯一标识符。
+     * @param b      包含更新后书籍信息的对象。此对象应包含需要更新的字段值。
+     * @return 返回更新操作影响的行数，如果更新成功则为1，否则为0。
+     */
+    public int updateBook(int bookId, Book b) {
+        // 获取可写的数据库实例
+        SQLiteDatabase db = this.getWritableDatabase();
+        // 创建 ContentValues 对象用于存储要更新的数据
+        ContentValues values = new ContentValues();
+        // 填充要更新的字段值
+        values.put("name", b.getName());
+        values.put("category", b.getCategory().ordinal());
+        values.put("author", b.getAuthor());
+        values.put("isbn", b.getISBN());
+        values.put("description", b.getDescription());
+        values.put("price", b.getPrice());
+        // 执行更新操作，whereClause确保只更新指定ID的记录
+        int rowsAffected = db.update("book", values, "id = ?", new String[]{String.valueOf(bookId)});
+        // 关闭数据库连接
+        db.close();
+        // 返回受影响的行数，指示更新是否成功
+        return rowsAffected;
+    }
+
     public void initData() {
         SQLiteDatabase db = this.getWritableDatabase();
         initData(db);
@@ -125,5 +157,10 @@ public class BookService extends MyDBHelper {
     public void deleteBook(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("book", "name=?", new String[]{name});
+    }
+    //以id为关键字删除数据
+    public void deleteBookByid(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("book", "id=?", new String[]{String.valueOf(id)});
     }
 }
