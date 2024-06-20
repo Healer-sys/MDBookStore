@@ -14,11 +14,11 @@ import com.lsx.finalhomework.entities.Book;
 
 import java.util.List;
 
-public class BookListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class UserBookListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Book> bookList;
     OnItemClickListener mItemClickListener;
 
-    public BookListAdapter(List<Book> bookList) {
+    public UserBookListAdapter(List<Book> bookList) {
         this.bookList = bookList;
     }
     public interface OnItemClickListener {
@@ -29,7 +29,7 @@ public class BookListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_fragment_item, parent, false);
-        return new BookListAdapter.ContentViewHolder(view);
+        return new UserBookListAdapter.ContentViewHolder(view);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BookListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         // 书本
         Book item = (Book) bookList.get(position);
-        BookListAdapter.ContentViewHolder contentHolder = (BookListAdapter.ContentViewHolder) holder;
+        UserBookListAdapter.ContentViewHolder contentHolder = (UserBookListAdapter.ContentViewHolder) holder;
         contentHolder.itemView.setTag(item.getId());
         contentHolder.nameView.setText(item.getName());
         contentHolder.authorView.setText(item.getAuthor());
@@ -53,7 +53,7 @@ public class BookListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemCount() {
         return bookList.size();
     }
-    public void setOnItemClickListener(BookListAdapter.OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(UserBookListAdapter.OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
     public static class ContentViewHolder extends RecyclerView.ViewHolder {

@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".controllers.OrderManagerfragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/order_manager_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:text="订单管理" />
+        android:layout_marginTop="5dp"
+        android:layout_margin="10dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/order_fragment_item" />
 
 </FrameLayout>

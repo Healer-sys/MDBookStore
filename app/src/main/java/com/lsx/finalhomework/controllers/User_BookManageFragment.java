@@ -7,8 +7,6 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +22,7 @@ import android.widget.Toast;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.lsx.finalhomework.R;
-import com.lsx.finalhomework.adapters.BookListAdapter;
+import com.lsx.finalhomework.adapters.UserBookListAdapter;
 import com.lsx.finalhomework.adapters.MyBookRecyclerViewAdapter;
 import com.lsx.finalhomework.entities.Book;
 import com.lsx.finalhomework.entities.BookService;
@@ -38,11 +36,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
-public class User_BookManageFragment extends Fragment implements MyBookRecyclerViewAdapter.OnItemClickListener, BookListAdapter.OnItemClickListener {
+public class User_BookManageFragment extends Fragment implements MyBookRecyclerViewAdapter.OnItemClickListener, UserBookListAdapter.OnItemClickListener {
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -58,7 +55,7 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
     String BookDate = new String();
     BookService bs;
     private List<Book> bookList;
-    BookListAdapter adapter;
+    UserBookListAdapter adapter;
     ArrayList bookListWithHeader;
     GridLayoutManager gridLayoutManager;
 
@@ -112,7 +109,7 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
         recyclerView.setLayoutManager(gridLayoutManager);
         bookListWithHeader = new ArrayList<>();
         bookListWithHeader.addAll(bs.getList());
-        adapter = new BookListAdapter(bookListWithHeader);
+        adapter = new UserBookListAdapter(bookListWithHeader);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
         //recyclerView设置点击事件
