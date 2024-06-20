@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".controllers.User_MainActivity">
+    android:background="#B4D2E3"
+    android:padding="20dp">
 
     <androidx.cardview.widget.CardView
         android:layout_marginTop="30sp"
@@ -23,9 +23,11 @@
         android:id="@+id/iv_login"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginTop="100dp"
         android:src="@drawable/vector_drawable_hygl" />
     <androidx.cardview.widget.CardView
         android:layout_marginTop="30sp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -36,6 +38,7 @@
         <LinearLayout
             android:id="@+id/login_container"
             android:layout_width="match_parent"
+            android:background="#DAE9F3"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="28dp">

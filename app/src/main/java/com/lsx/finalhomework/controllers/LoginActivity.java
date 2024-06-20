@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.lsx.finalhomework.MyAuth;
 import com.lsx.finalhomework.R;
+import com.lsx.finalhomework.entities.AESUtil;
 
 import java.util.Date;
 
@@ -74,7 +75,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (count >= 5) {
                 Intent intent = new Intent(LoginActivity.this, User_MainActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

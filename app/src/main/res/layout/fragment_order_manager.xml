@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controllers.infoManagerfragment">
+    tools:context=".controllers.OrderManagerfragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAlignment="center"
         android:textSize="30sp"
-        android:text="信息管理" />
+        android:text="订单管理" />
 
 </FrameLayout>

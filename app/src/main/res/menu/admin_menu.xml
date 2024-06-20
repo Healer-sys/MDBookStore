@@ -11,6 +11,6 @@
     <item
         android:icon="@drawable/infomanage"
         android:id="@+id/InfoM_item"
-        android:title="信息管理"/>
+        android:title="订单管理"/>
 
 </menu>

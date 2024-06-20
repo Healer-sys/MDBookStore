@@ -1,18 +1,13 @@
 package com.lsx.finalhomework.controllers;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.journeyapps.barcodescanner.ScanContract;
-import com.journeyapps.barcodescanner.ScanOptions;
 import com.lsx.finalhomework.R;
 import com.lsx.finalhomework.adapters.UserMenuViewAdapter;
 import com.lsx.finalhomework.entities.Book;
@@ -23,7 +18,7 @@ import java.util.List;
 public class User_MainActivity extends AppCompatActivity {
     User_BookManageFragment bookManageFragment;
     UserManageFragment userManageFragment;
-    infoManagerfragment infoManagerfragment;
+    OrderManagerfragment OrderManagerfragment;
 
 
     private BottomNavigationView mbottomNavigationView;
@@ -94,10 +89,17 @@ public class User_MainActivity extends AppCompatActivity {
 
         bookManageFragment = new User_BookManageFragment();
         userManageFragment = new UserManageFragment();
-        infoManagerfragment = new infoManagerfragment();
+        OrderManagerfragment = new OrderManagerfragment();
 
         fragmentList.add(bookManageFragment);
         fragmentList.add(userManageFragment);
-        fragmentList.add(infoManagerfragment);
+        fragmentList.add(OrderManagerfragment);
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 处理新的Intent，如果有需要
+        mUserMenuViewAdapter.notifyDataSetChanged();
+        bookManageFragment.UiUpdate();
     }
 }

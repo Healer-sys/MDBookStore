@@ -219,14 +219,13 @@ public class User_BookManageFragment extends Fragment implements MyBookRecyclerV
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("书本信息修改");
             builder.setMessage("你选择以下操作对书本信息进行修改");
+            builder.setIcon(R.drawable.bookmanage);    //设置图标
             builder.setNeutralButton("修改", (dialog, which) -> {
             //跳转
             Intent intent=new Intent(getContext(),BookFixedActivity.class);
             bundle.putSerializable("Book",((Book) item).getId());
             intent.putExtras(bundle);
             startActivity(intent);
-            //关闭Activity
-//            getActivity().finish();
             });
             builder.setNegativeButton("删除", (dialog, which) -> {
                 bs.deleteBookByid(((Book) item).getId());

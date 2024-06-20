@@ -10,9 +10,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/vector_drawable_hygl"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/vector_drawable_hygl"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalHomework">
         <activity
@@ -23,6 +23,7 @@
             />
         <activity
             android:name=".controllers.LoginActivity"
+            android:theme="@style/透明状态栏"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +38,8 @@
         <activity
             android:name=".controllers.User_MainActivity"
             android:exported="false"
-            android:label="@string/app_name" />
+            android:label="后台管理界面"
+            android:parentActivityName=".controllers.LoginActivity"/>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"

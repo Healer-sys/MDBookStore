@@ -44,9 +44,10 @@ public class BookFixedActivity extends AppCompatActivity {
         //设置显示
         et_selected[0].setText(book.getName());
         et_selected[1].setText(book.getAuthor());
-        et_selected[2].setText(book.getPrice()+"");
-        et_selected[3].setText(book.getDescription());
-        et_selected[4].setText(book.getISBN());
+        et_selected[2].setText(book.getDescription());
+        et_selected[3].setText(book.getISBN());
+        et_selected[4].setText(book.getPrice()+"");
+
         rb_selected[book.getCategory().ordinal()].setChecked(true);
 
         //点击按钮
@@ -57,13 +58,16 @@ public class BookFixedActivity extends AppCompatActivity {
                 Toast.makeText(this, temp + "没有填完", Toast.LENGTH_SHORT).show();
             }
             else {
-                getText( book);
-                bs.updateBook(book.getId(),book);
-                Intent UsarMain =new Intent(BookFixedActivity.this,User_MainActivity.class);
-                //关闭User_MainActivity
-
+                // 处理书本信息，
+                getText(book);
+                // 更新书本信息
+                bs.updateBook(book.getId(), book);
+                // 创建Intent跳转到User_MainActivity。
+                Intent UsarMain = new Intent(BookFixedActivity.this, User_MainActivity.class);
+                // FLAG_ACTIVITY_CLEAR_TOP表示如果目标Activity已经在栈中，则清除它上面的所有Activity；FLAG_ACTIVITY_SINGLE_TOP表示如果目标Activity已经在栈顶，则不会重新创建，而是回调onNewIntent方法
+                UsarMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                // 跳转到User_MainActivity
                 startActivity(UsarMain);
-                finish();
             }
         });
     }
@@ -81,13 +85,13 @@ public class BookFixedActivity extends AppCompatActivity {
                         book.setAuthor(et_selected[i].getText().toString());
                         break;
                     case 2:
-                        book.setPrice(Double.parseDouble(et_selected[i].getText().toString()));
-                        break;
-                    case 3:
                         book.setDescription(et_selected[i].getText().toString());
                         break;
-                    case 4:
+                    case 3:
                         book.setISBN(et_selected[i].getText().toString());
+                        break;
+                    case 4:
+                        book.setPrice(Double.parseDouble(et_selected[i].getText().toString()));
                         break;
                 }
             }

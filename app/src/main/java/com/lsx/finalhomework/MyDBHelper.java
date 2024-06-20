@@ -28,7 +28,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE account" +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "username VARCHAR(50)," +
-                "password CHAR(32))");
+                "password CHAR(100))");
         // 书本表
         db.execSQL("CREATE TABLE book" +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
