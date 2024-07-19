@@ -65,6 +65,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         timeView.setText(order.getOrderTime().format(Order.dateTimeFormatter));
 
         // 订单书本列表
+        //定义一个linearlayout设置显示
         LinearLayout orderDetailView = view.findViewById(R.id.linear_order_detail);
         for (OrderDetail orderDetail : orderDetails) {
             View itemView = inflater.inflate(R.layout.book_fragment_item_wide, orderDetailView, false);

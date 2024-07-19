@@ -53,11 +53,9 @@ public class BookFragment extends Fragment implements View.OnClickListener, MyBo
         super.onCreate(savedInstanceState);
         // 初始化书籍服务
         bs = new BookService(getContext());
-        // 获取所有书籍列表
         // 获取图书列表
         List<Book> bookList = bs.getList();
-        // 使用HashMap来按照书籍类别对书籍进行分类
-        // 创建分类到该类别的图书列表的映射
+        // 使用HashMap来按照书籍类别对书籍进行分类// 创建分类到该类别的图书列表的映射
         HashMap<Book.Category, List<Book>> map = new HashMap<>();
         // 初始化类别列表，用于存储所有的书籍类别
         categoryList = new ArrayList<>();
@@ -75,8 +73,7 @@ public class BookFragment extends Fragment implements View.OnClickListener, MyBo
             // 将当前书籍添加到对应的类别书籍列表中
             map.get(bookList.get(i).getCategory()).add(bookList.get(i));
         }
-        // 初始化综合书籍列表，包含所有书籍及类别标题
-        // 将分类的标题和各个分类的图书列表放入一个数组中
+        // 初始化综合书籍列表，包含所有书籍及类别标题 将分类的标题和各个分类的图书列表放入一个数组中
         bookListWithHeader = new ArrayList<>();
         // 遍历类别列表，将每个类别及其书籍添加到综合书籍列表中
         for (int i = 0; i < categoryList.size(); i++) {
@@ -123,7 +120,6 @@ public class BookFragment extends Fragment implements View.OnClickListener, MyBo
                     setActivePager(headerPositionMap.get(position) - (dy < 0 ? 1 : 0));
             }
         });
-
         // Set the pager
         pagerView = (LinearLayout) view.findViewById(R.id.linear_pager);
         pagerView.removeAllViews();
@@ -138,7 +134,6 @@ public class BookFragment extends Fragment implements View.OnClickListener, MyBo
                 v.setCardBackgroundColor(getResources().getColor(R.color.pager_bg_active, null));
             pagerView.addView(v);
         }
-
         return view;
     }
 

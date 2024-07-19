@@ -46,11 +46,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         toggleLoginReg.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
+        /* 获取共享偏好对象，用来存储和检索用户数据 */
         SharedPreferences sp = getSharedPreferences("preferences", MODE_PRIVATE);
+
+        /* 从共享偏好中获取默认用户名，不存在则返回空字符串 */
         String defaultUsername = sp.getString("username", "");
+
+        /* 检查默认用户名是否为空，如果不为空，将用户名显示 */
         if (!defaultUsername.equals("")) {
             this.username.setText(defaultUsername);
         }
+
         // 图片按钮设置点击事件处理逻辑
         ivlogin.setOnClickListener(view -> {
             // 记录当前时间戳

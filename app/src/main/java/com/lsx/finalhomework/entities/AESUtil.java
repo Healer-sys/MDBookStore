@@ -21,7 +21,6 @@ public class AESUtil {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
-    // 示例密钥和IV，实际应用中应从安全的地方获取或生成
     private static final String KEY = "1234567890123456"; // 密钥必须是16、24或32字节长
     private static final String IV = "1234567890123456"; // 16字节长的IV
 

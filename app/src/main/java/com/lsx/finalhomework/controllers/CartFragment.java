@@ -43,10 +43,6 @@ public class CartFragment extends Fragment implements View.OnClickListener, MyCa
     List<CartItem> cartItemList;
     TextView totalPriceView, placeholderView;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public CartFragment() {
     }
 

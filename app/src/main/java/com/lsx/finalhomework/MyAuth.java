@@ -21,8 +21,6 @@ import javax.crypto.SecretKey;
 public class MyAuth extends MyDBHelper {
 
     private static int userId;
-    public static String Key = "htEwE6Sl90KO4RymTo5GdB6Vu7/2b85WjLtdJWQhZ3M=";
-    SecretKey HKey;
 
     public MyAuth(Context context) {
         super(context);
